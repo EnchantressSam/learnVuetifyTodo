@@ -38,6 +38,10 @@
                         </v-avatar>
                         <p class="white--text subheading mt-1">Enchantress</p>
                     </v-flex>
+                    <!-- Popup dialog-->
+                    <v-flex class="mt-3 mb-4">
+                        <Popup />
+                    </v-flex>
                 </v-layout>
                  <v-list>
                   <v-list-item v-for="link in links" :key="link.text" roter :to="link.route">
@@ -54,7 +58,9 @@
 </template>
 
 <script>
+import Popup from './Popup.vue'
 export default {
+    components: { Popup},
     data() {
         return {
             drawer: false,
