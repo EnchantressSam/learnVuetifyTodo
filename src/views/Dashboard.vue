@@ -4,7 +4,7 @@
     <v-container class="my-5">
 
     
-      <v-layout row class="mb-3">
+      <v-layout row justify-start class="mb-3">
       <v-tooltip top>
       <template v-slot:activator="{ on }">
       <v-btn small text color="grey" @click="sortBy('title')" v-on="on">
@@ -63,15 +63,15 @@
 </template>
 
 <script>
-
+import db from '@/fb'
 export default {
   data() {
     return {
       projects: [
-        {title: 'Design a new website', person: 'Enchantress', due: '21th Feb 2020', status: 'ongoing', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore hic in quam natus deserunt temporibus eligendi est placeat ipsam aliquam vel qui, mollitia autem laudantium minus. Culpa sunt unde et!'},
-        {title: 'Code up the homepage', person: 'Anna', due: '25th Jan 2020', status: 'complete', content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor libero, rem nam nihil nostrum numquam molestiae est sunt reiciendis doloribus consequuntur. Asperiores ipsam illo non! Cumque exercitationem voluptas asperiores non.'},
-        {title: 'Design video thumbnails', person: 'Lora', due: '1st Feb 2020', status: 'complete', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe perspiciatis possimus, est obcaecati quas ipsum enim quibusdam quam commodi quidem omnis, reiciendis voluptatem veniam, cupiditate sed hic tempora expedita velit!'},
-        {title: 'Create a community forum', person: 'Max', due: '22th Jan 20202', status: 'overdue', content: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Odio asperiores atque praesentium dignissimos debitis reiciendis, voluptas placeat quod qui blanditiis nobis tempora repellat explicabo eius temporibus nihil laudantium eveniet expedita.'}
+        //{title: 'Design a new website', person: 'Enchantress', due: '21th Feb 2020', status: 'ongoing', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore hic in quam natus deserunt temporibus eligendi est placeat ipsam aliquam vel qui, mollitia autem laudantium minus. Culpa sunt unde et!'},
+        //{title: 'Code up the homepage', person: 'Anna', due: '25th Jan 2020', status: 'complete', content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor libero, rem nam nihil nostrum numquam molestiae est sunt reiciendis doloribus consequuntur. Asperiores ipsam illo non! Cumque exercitationem voluptas asperiores non.'},
+        //{title: 'Design video thumbnails', person: 'Lora', due: '1st Feb 2020', status: 'complete', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe perspiciatis possimus, est obcaecati quas ipsum enim quibusdam quam commodi quidem omnis, reiciendis voluptatem veniam, cupiditate sed hic tempora expedita velit!'},
+        //{title: 'Create a community forum', person: 'Max', due: '22th Jan 20202', status: 'overdue', content: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Odio asperiores atque praesentium dignissimos debitis reiciendis, voluptas placeat quod qui blanditiis nobis tempora repellat explicabo eius temporibus nihil laudantium eveniet expedita.'}
       ]
     }
   },
@@ -80,6 +80,19 @@ export default {
       this.projects.sort((a,b) => a[prop] < b[prop] ? -1 : 1)
     }
   },
+  created() {
+    db.collection('projects').onSnapshot(res => {
+      const changes = res.docChanges();
+      changes.forEach(change => {
+        if (change.type === 'added') {
+          this.projects.push({
+            ...change.doc.data(),
+            id: change.doc.id
+          })
+        }
+      })
+    })
+  }
   }
 
 </script>
